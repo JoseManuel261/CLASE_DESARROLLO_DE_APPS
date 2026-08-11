@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Lista de Mercado</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 20px;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    .contenedor {
+        max-width: 550px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 15px;
+        border: 1px solid #ccc;
+    }
+
+    .fila-inputs {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+
+    .fila-inputs input {
+        flex: 1;
+        min-width: 0;
+        padding: 6px;
+        box-sizing: border-box;
+    }
+
+    .fila-inputs button {
+        flex-shrink: 0;
+        padding: 8px 12px;
+        background-color: #A7C7E7;
+        color: #1b3a57;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    button:hover {
+        background-color: #93b9de;
+    }
+
+    ul {
+        margin-top: 15px;
+        padding-left: 20px;
+    }
+
+    #total {
+        margin-top: 15px;
+        font-weight: bold;
+        text-align: right;
+    }
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+    <h2>Lista de Mercado</h2>
+
+    <div class="fila-inputs">
+        <input type="text" id="inputElemento" placeholder="Elemento">
+        <input type="number" id="inputCantidad" placeholder="Cantidad">
+        <input type="number" id="inputPrecio" placeholder="Precio">
+        <button id="btnAgregar">Agregar</button>
+    </div>
+
+    <ul id="listaProductos"></ul>
+
+    <div id="total">Total: $0</div>
+</div>
+
+<script>
+    var total = 0;
+
+    var inputElemento = document.getElementById("inputElemento");
+    var inputCantidad = document.getElementById("inputCantidad");
+    var inputPrecio = document.getElementById("inputPrecio");
+    var btnAgregar = document.getElementById("btnAgregar");
+    var listaProductos = document.getElementById("listaProductos");
+    var totalDiv = document.getElementById("total");
+
+    btnAgregar.addEventListener("click", function () {
+
+        var elemento = inputElemento.value;
+        var cantidad = inputCantidad.value;
+        var precio = inputPrecio.value;
+
+        if (elemento === "" || cantidad === "" || precio === "") {
+            alert("Llena los 3 campos");
+            return;
+        }
+
+        var subtotal = cantidad * precio;
+
+        var item = document.createElement("li");
+        item.textContent = elemento + " - Cant: " + cantidad + " - Precio: $" + precio + " - Subtotal: $" + subtotal;
+
+        listaProductos.appendChild(item);
+
+        total = total + subtotal;
+        totalDiv.textContent = "Total: $" + total;
+
+        inputElemento.value = "";
+        inputCantidad.value = "";
+        inputPrecio.value = "";
+    });
+</script>
+
+</body>
+</html>
