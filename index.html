@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección Interactiva: Manipulación del DOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Tones -->
+    <!-- Application Structure Plan: A single-page lesson with top navigation ('Conceptos', 'Ejemplo Práctico', 'Ejercicios'). The structure follows a pedagogical flow: 1. Interactive cards for core concepts. 2. A live side-by-side demo of a to-do list with code highlighting to connect actions to code. 3. Sandboxed environments for users to attempt the exercises directly on the page. This design was chosen to make learning active and provide immediate feedback, which is crucial for understanding DOM manipulation. -->
+    <!-- Visualization & Content Choices: Concepts -> Goal: Organize -> Method: Interactive HTML/Tailwind cards -> Interaction: Click to reveal details. Justification: Breaks down info engagingly. | Live Demo -> Goal: Demonstrate -> Method: Side-by-side UI and highlighted code -> Interaction: User action highlights relevant JS. Justification: Visually connects cause and effect. | Exercises -> Goal: Apply -> Method: Sandboxed instances with code input -> Interaction: User writes and tests code live. Justification: Provides instant practice and feedback. All implemented with Vanilla JS and Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF5;
+            color: #4A4A4A;
+        }
+        .highlight-code {
+            background-color: #FCEFC7 !important;
+            transition: background-color 0.3s ease-in-out;
+            border-left: 4px solid #F9A826;
+        }
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 0.875rem;
+        }
+        .concept-card {
+            transition: all 0.3s ease;
+        }
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #D97706;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-amber-800">DOM Interactivo</h1>
+            <div class="flex space-x-6 md:space-x-8 text-sm md:text-base">
+                <a href="#conceptos" class="nav-link text-gray-600 hover:text-amber-700">Conceptos</a>
+                <a href="#ejemplo" class="nav-link text-gray-600 hover:text-amber-700">Ejemplo Práctico</a>
+                <a href="#ejercicios" class="nav-link text-gray-600 hover:text-amber-700">Ejercicios</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="intro" class="text-center mb-20">
+            <h2 class="text-4xl font-bold mb-4 text-amber-900">Manipulación del DOM</h2>
+            <p class="text-lg max-w-3xl mx-auto text-gray-600">Aprende a dar vida a tus páginas web. Esta lección interactiva te enseñará a usar JavaScript para modificar el contenido, estilo y estructura de tu HTML de forma dinámica.</p>
+        </section>
+
+        <section id="conceptos" class="mb-20">
+            <h3 class="text-3xl font-bold text-center mb-2 text-amber-900">Conceptos Clave</h3>
+            <p class="text-center text-gray-600 mb-12">El DOM (Document Object Model) es la estructura de tu página. JavaScript te da las herramientas para ser su arquitecto. Haz clic en cada categoría para explorar los métodos fundamentales.</p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="concept-card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h4 class="text-xl font-bold mb-3 text-emerald-700">1. Selección de Elementos</h4>
+                    <p class="mb-4 text-gray-600">Para manipular un elemento, primero debes encontrarlo en el DOM.</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><code class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded">getElementById('id')</code>: El más rápido, busca por ID único.</li>
+                        <li><code class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded">querySelector('css')</code>: Versátil, encuentra el primer elemento que coincida con un selector CSS.</li>
+                        <li><code class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded">querySelectorAll('css')</code>: Poderoso, devuelve todos los elementos que coincidan.</li>
+                    </ul>
+                </div>
+                <div class="concept-card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h4 class="text-xl font-bold mb-3 text-sky-700">2. Modificación de Elementos</h4>
+                    <p class="mb-4 text-gray-600">Una vez seleccionado, puedes cambiar casi todo sobre un elemento.</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><code class="bg-sky-100 text-sky-800 px-2 py-1 rounded">.textContent</code>: Cambia el contenido de texto.</li>
+                        <li><code class="bg-sky-100 text-sky-800 px-2 py-1 rounded">.style.property</code>: Modifica estilos CSS directamente.</li>
+                        <li><code class="bg-sky-100 text-sky-800 px-2 py-1 rounded">.classList.add/remove</code>: Añade o quita clases CSS para cambiar estilos.</li>
+                    </ul>
+                </div>
+                <div class="concept-card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h4 class="text-xl font-bold mb-3 text-rose-700">3. Creación y Eliminación</h4>
+                    <p class="mb-4 text-gray-600">Crea nuevos elementos desde cero y añádelos o elimínalos del DOM.</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><code class="bg-rose-100 text-rose-800 px-2 py-1 rounded">createElement('tag')</code>: Crea un nuevo nodo HTML (ej: 'div', 'li').</li>
+                        <li><code class="bg-rose-100 text-rose-800 px-2 py-1 rounded">.appendChild(child)</code>: Inserta un elemento como el último hijo de otro.</li>
+                        <li><code class="bg-rose-100 text-rose-800 px-2 py-1 rounded">.removeChild(child)</code>: Elimina un elemento hijo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ejemplo" class="mb-20">
+            <h3 class="text-3xl font-bold text-center mb-2 text-amber-900">Ejemplo Práctico en Acción</h3>
+            <p class="text-center text-gray-600 mb-12">Observa cómo los conceptos se unen. A la izquierda, una simple lista de tareas. A la derecha, el código JavaScript que la controla. Añade una tarea y mira qué líneas de código se iluminan para hacer la magia.</p>
+
+            <div class="grid lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                    <h4 class="text-xl font-bold mb-4">Mi Lista de Tareas</h4>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="demoTareaInput" placeholder="Escribe una nueva tarea..." class="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <button id="demoAgregarBtn" class="bg-amber-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-amber-700 transition-colors">Agregar</button>
+                    </div>
+                    <ul id="demoListaTareas" class="list-disc list-inside bg-gray-50 p-4 rounded-md min-h-[150px]">
+                        <li class="p-1">Estudiar JavaScript</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="code-block">
+                        <span id="code-line-1">const tareaInput = document.getElementById('demoTareaInput');</span>
+                        <span id="code-line-2">const agregarBtn = document.getElementById('demoAgregarBtn');</span>
+                        <span id="code-line-3">const listaTareas = document.getElementById('demoListaTareas');</span>
+                        <br>
+                        <span id="code-line-4">agregarBtn.addEventListener('click', function() {</span>
+                        <span id="code-line-5" class="ml-4">const nuevaTareaTexto = tareaInput.value;</span>
+                        <span id="code-line-6" class="ml-4">if (nuevaTareaTexto === '') return;</span>
+                        <br>
+                        <span id="code-line-7" class="ml-4">const nuevaTareaLi = document.createElement('li');</span>
+                        <span id="code-line-8" class="ml-4">nuevaTareaLi.textContent = nuevaTareaTexto;</span>
+                        <span id="code-line-9" class="ml-4">listaTareas.appendChild(nuevaTareaLi);</span>
+                        <br>
+                        <span id="code-line-10" class="ml-4">tareaInput.value = '';</span>
+                        <span id="code-line-11">});</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ejercicios">
+            <h3 class="text-3xl font-bold text-center mb-2 text-amber-900">¡Ahora es tu turno!</h3>
+            <p class="text-center text-gray-600 mb-12">Aplica lo que has aprendido. Cada ejercicio tiene su propio entorno. Modifica el código y prueba tu solución.</p>
+            
+            <div class="space-y-12">
+                <article class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                    <h4 class="text-xl font-bold mb-2">Ejercicio 1: Modificar el Estilo</h4>
+                    <p class="mb-4 text-gray-600"><strong>Objetivo:</strong> Haz que al hacer clic en una tarea de la lista, su fondo cambie a un color verde claro y el texto se tache para marcarla como completada.</p>
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div>
+                            <h5 class="font-semibold mb-2">Entorno de Práctica</h5>
+                            <div class="border p-4 rounded-md">
+                                <ul id="ex1ListaTareas" class="list-disc list-inside cursor-pointer">
+                                    <li class="p-1">Hacer clic aquí</li>
+                                    <li class="p-1">Y aquí también</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold mb-2">Tu Solución (JavaScript)</h5>
+                            <div class="code-block" id="ex1-solution-code" contenteditable="true" spellcheck="false">
+// Pista: Necesitas un event listener en la lista (ul)
+// y luego verificar si el clic fue en un 'li'.
+// Usa event.target y classList.toggle('completed')
+
+// Escribe tu código aquí...
+                            </div>
+                            <style>
+                                #ex1ListaTareas .completed {
+                                    background-color: #D1FAE5;
+                                    text-decoration: line-through;
+                                    color: #065F46;
+                                }
+                            </style>
+                            <button onclick="runEx1()" class="mt-2 bg-emerald-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">Probar Solución</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                    <h4 class="text-xl font-bold mb-2">Ejercicio 2: Añadir Botón para Eliminar</h4>
+                    <p class="mb-4 text-gray-600"><strong>Objetivo:</strong> Modifica la lógica para que cada vez que se agregue una nueva tarea, también se añada un botón "Eliminar". Al hacer clic en ese botón, la tarea correspondiente debe desaparecer de la lista.</p>
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div>
+                            <h5 class="font-semibold mb-2">Entorno de Práctica</h5>
+                            <div class="border p-4 rounded-md">
+                                <div class="flex gap-2 mb-4">
+                                    <input type="text" id="ex2TareaInput" placeholder="Añadir para ver el botón" class="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                                    <button id="ex2AgregarBtn" class="bg-amber-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-amber-700 transition-colors">Agregar</button>
+                                </div>
+                                <ul id="ex2ListaTareas" class="space-y-2"></ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold mb-2">Tu Solución (JavaScript)</h5>
+                             <div class="code-block" id="ex2-solution-code" contenteditable="true" spellcheck="false">
+// Pista: Dentro del listener del botón 'Agregar',
+// crea un botón con createElement.
+// Añade un listener a ESE nuevo botón para que
+// elimine a su elemento padre (el 'li').
+// li.remove() es una forma moderna de hacerlo.
+
+// Escribe tu código aquí...
+                            </div>
+                            <button onclick="runEx2()" class="mt-2 bg-emerald-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">Probar Solución</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center text-sm">
+            <p>&copy; 2024 Lección Interactiva del DOM. Creado para facilitar el aprendizaje.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Navegación Activa ---
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+
+            window.onscroll = () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 60) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.href.includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            // --- Ejemplo Práctico ---
+            const demoTareaInput = document.getElementById('demoTareaInput');
+            const demoAgregarBtn = document.getElementById('demoAgregarBtn');
+            const demoListaTareas = document.getElementById('demoListaTareas');
+            const codeLines = document.querySelectorAll('.code-block span[id^="code-line"]');
+
+            function highlightCode(lines, duration = 1500) {
+                lines.forEach(line => {
+                    const el = document.getElementById(`code-line-${line}`);
+                    if(el) el.classList.add('highlight-code');
+                });
+                setTimeout(() => {
+                    lines.forEach(line => {
+                        const el = document.getElementById(`code-line-${line}`);
+                        if(el) el.classList.remove('highlight-code');
+                    });
+                }, duration);
+            }
+
+            highlightCode([1, 2, 3], 2000);
+
+            demoAgregarBtn.addEventListener('click', function() {
+                highlightCode([4, 11]);
+                setTimeout(() => {
+                    const nuevaTareaTexto = demoTareaInput.value;
+                    highlightCode([5]);
+                    if (nuevaTareaTexto === '') {
+                        highlightCode([6]);
+                        return;
+                    }
+                    
+                    setTimeout(() => {
+                        const nuevaTareaLi = document.createElement('li');
+                        nuevaTareaLi.className = "p-1";
+                        highlightCode([7]);
+                        
+                        setTimeout(() => {
+                            nuevaTareaLi.textContent = nuevaTareaTexto;
+                            highlightCode([8]);
+
+                            setTimeout(() => {
+                                demoListaTareas.appendChild(nuevaTareaLi);
+                                highlightCode([9]);
+
+                                setTimeout(() => {
+                                    demoTareaInput.value = '';
+                                    highlightCode([10]);
+                                }, 500);
+                            }, 500);
+                        }, 500);
+                    }, 500);
+                }, 500);
+            });
+        });
+
+        // --- Lógica de Ejercicios ---
+        function runEx1() {
+            try {
+                const userCode = document.getElementById('ex1-solution-code').innerText;
+                const script = document.createElement('script');
+                script.innerHTML = `
+                    const ex1ListaTareas = document.getElementById('ex1ListaTareas');
+                    ${userCode}
+                `;
+                document.body.appendChild(script);
+                document.body.removeChild(script);
+            } catch (e) {
+                console.error("Error en el código del Ejercicio 1:", e);
+                alert("Parece que hay un error en tu código. Revisa la consola para más detalles.");
+            }
+        }
+
+        function runEx2() {
+            try {
+                const userCode = document.getElementById('ex2-solution-code').innerText;
+                const script = document.createElement('script');
+                script.innerHTML = `
+                    const ex2TareaInput = document.getElementById('ex2TareaInput');
+                    const ex2AgregarBtn = document.getElementById('ex2AgregarBtn');
+                    const ex2ListaTareas = document.getElementById('ex2ListaTareas');
+                    
+                    ex2AgregarBtn.onclick = null; // Limpiar listener anterior para evitar duplicados
+                    
+                    ${userCode}
+                `;
+                document.body.appendChild(script);
+                document.body.removeChild(script);
+            } catch (e) {
+                console.error("Error en el código del Ejercicio 2:", e);
+                alert("Parece que hay un error en tu código. Revisa la consola para más detalles.");
+            }
+        }
+    </script>
+</body>
+</html>
