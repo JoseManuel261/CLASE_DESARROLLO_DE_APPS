@@ -1,0 +1,59 @@
+<div class="calculadora">
+  <h2>Calculadora</h2>
+
+  <div class="campo">
+    <label for="numero1">Número 1</label>
+    <input
+      id="numero1"
+      type="number"
+      [(ngModel)]="numero1"
+      name="numero1"
+    />
+  </div>
+
+  <div class="campo">
+    <label for="numero2">Número 2</label>
+    <input
+      id="numero2"
+      type="number"
+      [(ngModel)]="numero2"
+      name="numero2"
+    />
+  </div>
+
+  <div class="campo">
+    <label for="operacion">Operación</label>
+    <select id="operacion" [(ngModel)]="operacionSeleccionada" name="operacion">
+      <option value="suma">Suma</option>
+      <option value="resta">Resta</option>
+      <option value="multiplicacion">Multiplicación</option>
+      <option value="division">División</option>
+    </select>
+    <button (click)="calcular(operacionSeleccionada)">Calcular</button>
+  </div>
+
+  <div class="campo">
+    <label>Resultado</label>
+    @if (errorMensaje) {
+      <p class="error">{{ errorMensaje }}</p>
+    } @else if (resultado !== null) {
+      <p class="resultado">{{ resultado }}</p>
+    } @else {
+      <p class="vacio">—</p>
+    }
+  </div>
+
+  <div class="campo">
+    <label>Históricos</label>
+    @if (historial.length === 0) {
+      <p class="vacio">Sin operaciones</p>
+    } @else {
+      <ul class="lista-historial">
+        @for (item of historial; track $index) {
+          <li>{{ item.numero1 }} {{ item.tipo }} {{ item.numero2 }} = {{ item.resultado }}</li>
+        }
+      </ul>
+      <button class="btn-limpiar" (click)="limpiarHistorial()">Limpiar historial</button>
+    }
+  </div>
+</div>

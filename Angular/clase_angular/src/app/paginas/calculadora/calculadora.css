@@ -1,0 +1,74 @@
+.calculadora {
+  max-width: 400px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-family: sans-serif;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+input,
+select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.5rem;
+  border: 1px solid #333;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f0f0f0;
+}
+
+.resultado {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.error {
+  color: #b00020;
+}
+
+.vacio {
+  color: #777;
+  font-style: italic;
+}
+
+.lista-historial {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.lista-historial li {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.lista-historial li:last-child {
+  border-bottom: none;
+}
+
+.btn-limpiar {
+  align-self: flex-start;
+}
